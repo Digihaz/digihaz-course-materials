@@ -7,7 +7,6 @@
 
 | File | Description |
 |------|-------------|
-
 | `notebooks/DRR_Exercise_02.ipynb` | Student exercise |
 | `slides/` | PDF slide exports |
 | `data/` | Sample datasets |
