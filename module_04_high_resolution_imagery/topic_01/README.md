@@ -8,7 +8,7 @@
 | File | Description |
 |------|-------------|
 | `notebooks/01_lecture_demo.ipynb` | Lecture demonstration notebook  DO NOT USE IT
-| `notebooks/02_exercise.ipynb` | Student exercise   DO NOT USE IT
+| `notebooks/02_exercise.ipynb` | Student exercise sample  DO NOT USE IT
 | `notebooks/DRR_Exercise_01.ipynb` | Student exercise | 
 | `slides/` | PDF slide exports |
 | `data/` | Sample datasets |
