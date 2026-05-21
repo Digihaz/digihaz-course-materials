@@ -6,15 +6,14 @@
 
 | # | Title |
 |---|-------|
-| 01 | UAV Basics and Mission Planning |
+| 01 | Unmanned Systems & Image processing Basics |
 | 02 | Drone Data Processing with OpenDroneMap |
 | 03 | UAV Regulatory Framework |
 | 04 | Damage Assessment with UAV Data |
 
 ## Prerequisites
 
-- [Prerequisite 1]
-- [Prerequisite 2]
+- [Pevious modules}
 
 ## Duration
 
