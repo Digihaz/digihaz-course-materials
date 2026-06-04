@@ -10,12 +10,3 @@
 | 02 | Optical Image Classification |
 | 03 | SAR Coherence and Change Detection |
 | 04 | Validation and Accuracy Assessment |
-
-## Prerequisites
-
-- [Prerequisite 1]
-- [Prerequisite 2]
-
-## Duration
-
-Approximately 4 × 3h sessions (lectures + practicals).
