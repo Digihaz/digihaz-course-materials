@@ -2,13 +2,7 @@
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Digihaz/digihaz-course-materials/blob/main/module_06_forecasting_early_warning/topic_04/notebooks/02_exercise.ipynb)
 
-## Learning Objectives
 
-By the end of this topic students will be able to:
-
-1. [Objective 1]
-2. [Objective 2]
-3. [Objective 3]
 
 ## Contents
 
@@ -19,7 +13,3 @@ By the end of this topic students will be able to:
 | `slides/` | PDF slide exports |
 | `data/` | Sample datasets |
 
-## References
-
-- [Reference 1]
-- [Reference 2]
