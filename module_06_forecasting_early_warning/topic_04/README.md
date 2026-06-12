@@ -1,6 +1,6 @@
-# DigiHaz EWS Workshop — Jupyter Notebooks
+# DigiHaz EWS Topic 4 — Jupyter Notebooks
 
-**Module 5: Early Warning System Design**
+**Module 6 - Topic 4 : Early Warning System Design**
 
 Three interactive notebooks. Open directly in **Google Colab** — no installation, no account needed beyond a Google login.
 
