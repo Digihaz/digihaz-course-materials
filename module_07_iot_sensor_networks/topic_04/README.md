@@ -1,16 +1,15 @@
-# AI-Assisted IoT Development — DigiHaz Workshop
+# AI-Assisted IoT Development 
 
 **Module 7 of the DigiHaz Doctoral Training Programme**
 
-A 1-day workshop on building IoT sensor networks for natural hazard monitoring using AI-assisted programming (LLMs such as Claude, ChatGPT, Copilot — workshop is vendor-neutral).
+A workshop on building IoT sensor networks for natural hazard monitoring using AI-assisted programming (LLMs such as Claude, ChatGPT, Copilot — workshop is vendor-neutral).
 
 ---
 
-## Workshop Overview
+Overview
 
 | | |
 |---|---|
-| **Duration** | 1 day (~6 hours) |
 | **Audience** | PhD students with some Python background, no hardware experience required |
 | **Hardware** | ESP32, Raspberry Pi, or Wokwi browser simulator (no physical hardware needed) |
 | **Sensors** | MPU6050 (tilt) · BMP280 (pressure) · Capacitive soil moisture |
@@ -18,7 +17,7 @@ A 1-day workshop on building IoT sensor networks for natural hazard monitoring u
 
 ---
 
-## Workshop Structure
+## Structure
 
 | Part | Topic | Time |
 |------|-------|------|
@@ -77,7 +76,7 @@ topic_04/
 
 ---
 
-## Key Workshop Concepts
+## Key Concepts
 
 ### The 5-Step AI-Assisted Coding Loop
 1. **PROMPT** — Describe in plain English what you want
