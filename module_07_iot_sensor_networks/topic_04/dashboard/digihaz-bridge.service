@@ -1,0 +1,40 @@
+# DigiHaz MQTT → InfluxDB Bridge — systemd unit file
+# 
+# Install on a Raspberry Pi (or any Linux box) to run the bridge 24/7:
+#
+#   1. Copy this file to /etc/systemd/system/digihaz-bridge.service
+#   2. Edit the paths and environment variables below
+#   3. Run:
+#        sudo systemctl daemon-reload
+#        sudo systemctl enable digihaz-bridge.service
+#        sudo systemctl start  digihaz-bridge.service
+#        sudo systemctl status digihaz-bridge.service
+#   4. View live logs:
+#        journalctl -u digihaz-bridge.service -f
+
+[Unit]
+Description=DigiHaz MQTT to InfluxDB Bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/digihaz
+ExecStart=/usr/bin/python3 /home/pi/digihaz/mqtt_to_influx_bridge.py
+Restart=always
+RestartSec=10
+
+# Environment variables — replace with your actual credentials
+Environment="INFLUX_URL=https://us-east-1-1.aws.cloud2.influxdata.com"
+Environment="INFLUX_TOKEN=PASTE_YOUR_TOKEN_HERE"
+Environment="INFLUX_ORG=digihaz"
+Environment="INFLUX_BUCKET=digihaz_sensors"
+Environment="MQTT_BROKER=test.mosquitto.org"
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

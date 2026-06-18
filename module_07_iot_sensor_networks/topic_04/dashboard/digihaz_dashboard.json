@@ -1,0 +1,323 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {"type": "grafana", "uid": "-- Grafana --"},
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Real-time IoT sensor dashboard for the DigiHaz Module 7 workshop. Visualises MPU6050 tilt, BMP280 pressure, and capacitive soil moisture data from all participating sensor nodes.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+      "description": "Current alert level for each site. Red = landslide alert, Orange = elevated risk, Green = normal.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [
+            {"options": {"GREEN": {"color": "green", "index": 0, "text": "✓ GREEN"}}, "type": "value"},
+            {"options": {"YELLOW": {"color": "orange", "index": 1, "text": "⚠ YELLOW"}}, "type": "value"},
+            {"options": {"RED": {"color": "red", "index": 2, "text": "🚨 RED"}}, "type": "value"}
+          ],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]}
+        }
+      },
+      "gridPos": {"h": 4, "w": 24, "x": 0, "y": 0},
+      "id": 1,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+          "query": "from(bucket: \"${bucket}\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"sensors\")\n  |> filter(fn: (r) => r._field == \"tilt_deg\")\n  |> last()\n  |> keep(columns: [\"site\", \"alert\"])\n  |> group(columns: [\"site\"])\n  |> last(column: \"alert\")",
+          "refId": "A"
+        }
+      ],
+      "title": "🚦 Alert Status — All Sites (last 5 min)",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+      "description": "Tilt angle (degrees from vertical) measured by MPU6050. Thresholds: 5° yellow, 10° red.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Tilt (degrees)",
+            "axisPlacement": "auto",
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 4,
+            "scaleDistribution": {"type": "linear"},
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {"group": "A", "mode": "none"},
+            "thresholdsStyle": {"mode": "line"}
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "orange", "value": 5},
+              {"color": "red", "value": 10}
+            ]
+          },
+          "unit": "degree"
+        }
+      },
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 4},
+      "id": 2,
+      "options": {
+        "legend": {"calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true},
+        "tooltip": {"mode": "multi", "sort": "desc"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+          "query": "from(bucket: \"${bucket}\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"sensors\")\n  |> filter(fn: (r) => r._field == \"tilt_deg\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "📐 Tilt Angle (MPU6050) — by Site",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+      "description": "Soil moisture (percentage) measured by capacitive sensor. Thresholds: 80% yellow, 90% red.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Soil moisture (%)",
+            "axisPlacement": "auto",
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 4,
+            "showPoints": "never",
+            "thresholdsStyle": {"mode": "line"}
+          },
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "orange", "value": 80},
+              {"color": "red", "value": 90}
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 4},
+      "id": 3,
+      "options": {
+        "legend": {"calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true},
+        "tooltip": {"mode": "multi", "sort": "desc"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+          "query": "from(bucket: \"${bucket}\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"sensors\")\n  |> filter(fn: (r) => r._field == \"soil_pct\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "💧 Soil Moisture (Capacitive Sensor) — by Site",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+      "description": "Atmospheric pressure (hPa) from BMP280. Sharp drops precede storms.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Pressure (hPa)",
+            "axisPlacement": "auto",
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 4,
+            "showPoints": "never"
+          },
+          "unit": "pressurehpa"
+        }
+      },
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 13},
+      "id": 4,
+      "options": {
+        "legend": {"calcs": ["lastNotNull", "min"], "displayMode": "table", "placement": "bottom", "showLegend": true},
+        "tooltip": {"mode": "multi", "sort": "desc"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+          "query": "from(bucket: \"${bucket}\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"sensors\")\n  |> filter(fn: (r) => r._field == \"press_hpa\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "🌀 Atmospheric Pressure (BMP280) — by Site",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+      "description": "Rate of pressure change (hPa per hour). Below -2 indicates an approaching storm.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisCenteredZero": true,
+            "axisLabel": "Pressure trend (hPa/hr)",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "thresholdsStyle": {"mode": "dashed"}
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "red", "value": null},
+              {"color": "green", "value": -2}
+            ]
+          }
+        }
+      },
+      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 13},
+      "id": 5,
+      "options": {
+        "legend": {"calcs": ["min", "lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true},
+        "tooltip": {"mode": "multi"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+          "query": "from(bucket: \"${bucket}\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"sensors\")\n  |> filter(fn: (r) => r._field == \"press_hpa\")\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n  |> derivative(unit: 1h, nonNegative: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "📉 Pressure Trend (hPa per hour) — Storm Indicator",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+      "description": "Last 24 hours: count of YELLOW and RED alerts per site.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "custom": {"align": "auto", "displayMode": "auto"},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "orange", "value": 1},
+              {"color": "red", "value": 10}
+            ]
+          }
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 22},
+      "id": 6,
+      "options": {
+        "footer": {"fields": "", "reducer": ["sum"], "show": false},
+        "showHeader": true
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+          "query": "from(bucket: \"${bucket}\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"sensors\")\n  |> filter(fn: (r) => r._field == \"tilt_deg\")\n  |> filter(fn: (r) => r.alert == \"YELLOW\" or r.alert == \"RED\")\n  |> group(columns: [\"site\", \"alert\"])\n  |> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "🚨 Alert Counts — Last 24 Hours",
+      "type": "table"
+    },
+    {
+      "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+      "description": "Latest reading from every sensor at every site.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "custom": {"align": "auto", "displayMode": "auto"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]}
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 22},
+      "id": 7,
+      "options": {
+        "footer": {"fields": "", "reducer": ["sum"], "show": false},
+        "showHeader": true
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {"type": "influxdb", "uid": "${DS_INFLUXDB}"},
+          "query": "from(bucket: \"${bucket}\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"sensors\")\n  |> last()\n  |> pivot(rowKey: [\"site\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> keep(columns: [\"site\", \"tilt_deg\", \"press_hpa\", \"soil_pct\", \"alert\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "📊 Latest Readings — All Sites",
+      "type": "table"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["digihaz", "iot", "workshop", "module6"],
+  "templating": {
+    "list": [
+      {
+        "current": {"selected": false, "text": "digihaz_sensors", "value": "digihaz_sensors"},
+        "hide": 0,
+        "label": "InfluxDB Bucket",
+        "name": "bucket",
+        "options": [{"selected": true, "text": "digihaz_sensors", "value": "digihaz_sensors"}],
+        "query": "digihaz_sensors",
+        "skipUrlSync": false,
+        "type": "constant"
+      }
+    ]
+  },
+  "time": {"from": "now-1h", "to": "now"},
+  "timepicker": {
+    "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h"]
+  },
+  "timezone": "browser",
+  "title": "DigiHaz IoT Sensor Network — Module 7",
+  "uid": "digihaz-iot-m6",
+  "version": 1,
+  "weekStart": ""
+}
