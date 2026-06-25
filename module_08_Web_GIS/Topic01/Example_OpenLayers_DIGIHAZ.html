@@ -1,0 +1,32 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.7.0/ol.css"
+    type="text/css">
+  <style>
+    .map {
+      height: 800px;
+      width: 100%;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/ol@v10.7.0/dist/ol.js"></script>
+  <title>Simple example of an OpenLayers interactive web map</title>
+</head>
+<body>
+  <h2>University of West Attica</h2>
+  <div id="map" class="map"></div>
+  <script type="text/javascript">
+    var map = new ol.Map({
+      target: 'map',
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([23.6755, 38.0032]),
+        zoom: 17
+      })
+    });
+  </script>
+</body>
+</html>
